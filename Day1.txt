@@ -1,0 +1,38 @@
+        private void Day1_Puzzle1()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Day1_IP1.txt");
+            int count = 0;
+            int prev = int.MaxValue;
+            foreach(var line in lines)
+            {
+                int curr = Convert.ToInt32(line);
+                if (curr > prev)
+                {
+                    count++;
+                }
+                prev = curr;
+            }
+        }
+
+        private void Day1_Puzzle2()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Day1_IP1.txt");
+            int count = 0;
+
+            int v1 = Convert.ToInt32(lines[0]);
+            int v2 = Convert.ToInt32(lines[1]);
+            int v3 = Convert.ToInt32(lines[2]);
+            var prev = v1 + v2 + v3;
+            for (int i = 1; i < lines.Count; i++)
+            {
+                v1 = Convert.ToInt32(lines[i]);
+                v2 = i + 1 < lines.Count ? Convert.ToInt32(lines[i + 1]) : 0;
+                v3 = i+2 < lines.Count ? Convert.ToInt32(lines[i+2]) : 0;
+                var curr = v1 + v2 + v3;
+                if (curr > prev)
+                {
+                    count++;
+                }
+                prev = curr;
+            }
+        }
