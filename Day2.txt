@@ -1,0 +1,51 @@
+ double horiz = 0;
+        double depth = 0;
+        double aim = 0;
+        void Day2_Puzzle1()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Day2_IP.txt");
+            foreach(var line in lines)
+            {
+                var vals = line.Split(' ');
+                double val = Convert.ToDouble(vals[1]);
+                if (vals[0].Equals("forward"))
+                {
+                    horiz += val;
+                }
+                if (vals[0].Equals("down"))
+                {
+                    depth += val;
+                }
+                if (vals[0].Equals("up"))
+                {
+                    depth -= val;
+                }
+            }
+
+            var prod = horiz * depth;
+        }
+
+        void Day2_Puzzle2()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Day2_IP.txt");
+            foreach (var line in lines)
+            {
+                var vals = line.Split(' ');
+                double val = Convert.ToDouble(vals[1]);
+                if (vals[0].Equals("forward"))
+                {
+                    horiz += val;
+                    depth += aim * val ;
+                }
+                if (vals[0].Equals("down"))
+                {
+                    aim += val;
+                }
+                if (vals[0].Equals("up"))
+                {
+                    aim -= val;
+                }
+            }
+
+            var prod = horiz * depth;
+        }
