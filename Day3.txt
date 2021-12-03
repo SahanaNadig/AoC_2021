@@ -1,0 +1,157 @@
+        private void Day3_Puzzle2()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Day3_IP.txt");
+            List<String> o2_qualifiers = new List<string>();
+            List<String> co2_qualifiers = new List<string>();
+
+            foreach (var line in lines)
+            {
+                o2_qualifiers.Add(line);
+                co2_qualifiers.Add(line);
+            }
+
+            while (true)
+            {
+                for (int i = 0; i < 12; i++)
+                {
+                    int ones = 0; int zeros = 0;
+                    foreach (var line in o2_qualifiers)
+                    {
+                        var x = Convert.ToInt32(line[i]);
+                        if (x == 49)
+                        {
+                            ones++;
+                        }
+                        else
+                        {
+                            zeros++;
+                        }
+                    }
+
+                    if (ones >= zeros)
+                    {
+                        List<String> toremove = new List<string>();
+                        foreach (var line in o2_qualifiers)
+                        {
+                            var x = Convert.ToInt32(line[i]);
+                            if (x == 48)
+                            {
+                                toremove.Add(line);
+                            }
+                        }
+                        toremove.ForEach(r => o2_qualifiers.Remove(r));
+                    }
+                    else
+                    {
+                        List<String> toremove = new List<string>();
+                        foreach (var line in o2_qualifiers)
+                        {
+                            var x = Convert.ToInt32(line[i]);
+                            if (x == 49)
+                            {
+                                toremove.Add(line);
+                            }
+                        }
+                        toremove.ForEach(r => o2_qualifiers.Remove(r));
+                    }
+                    if (o2_qualifiers.Count == 1) break;
+                }
+                if (o2_qualifiers.Count == 1) break;
+            }
+
+            while (true)
+            {
+                for (int i = 0; i < 12; i++)
+                {
+                    int ones = 0; int zeros = 0;
+                    foreach (var line in co2_qualifiers)
+                    {
+                        var x = Convert.ToInt32(line[i]);
+                        if (x == 49)
+                        {
+                            ones++;
+                        }
+                        else
+                        {
+                            zeros++;
+                        }
+                    }
+
+                    if (ones >= zeros)
+                    {
+                        List<String> toremove = new List<string>();
+                        foreach (var line in co2_qualifiers)
+                        {
+                            var x = Convert.ToInt32(line[i]);
+                            if (x == 49)
+                            {
+                                toremove.Add(line);
+                            }
+                        }
+                        toremove.ForEach(r => co2_qualifiers.Remove(r));
+                    }
+                    else
+                    {
+                        List<String> toremove = new List<string>();
+                        foreach (var line in co2_qualifiers)
+                        {
+                            var x = Convert.ToInt32(line[i]);
+                            if (x == 48)
+                            {
+                                toremove.Add(line);
+                            }
+                        }
+                        toremove.ForEach(r => co2_qualifiers.Remove(r));
+                    }
+                    if (co2_qualifiers.Count == 1) break;
+                }
+                if (co2_qualifiers.Count == 1) break;
+            }
+
+            String co2 = String.Empty;
+            String o2 = String.Empty;
+            o2_qualifiers.ForEach(r => o2 += r);
+            co2_qualifiers.ForEach(r => co2 += r);
+            var g = Convert.ToInt32(o2, 2);
+            var e = Convert.ToInt32(co2, 2);
+
+              var ans = g * e;
+        }
+
+        private void Day3_Puzzle1()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Day3_IP.txt");
+            String gamma = String.Empty;
+            String epsilon = String.Empty;
+            for (int i = 0; i < 12; i++)
+            {
+                int ones = 0; int zeros = 0;
+                foreach (var line in lines)
+                {
+                    var x = Convert.ToInt32(line[i]);
+                    if (x == 49)
+                    {
+                        ones++;
+                    }
+                    else
+                    {
+                        zeros++;
+                    }
+                }
+
+                if (ones > zeros)
+                {
+                    gamma += '1';
+                    epsilon += '0';
+                }
+                else
+                {
+                    epsilon += '1';
+                    gamma += '0';
+                }
+            }
+            var g = Convert.ToInt32(gamma,2);
+            var e = Convert.ToInt32(epsilon,2);
+
+            var ans = g * e;
+        }
