@@ -1,0 +1,117 @@
+
+        private Dictionary<int, Dictionary<int, List<int>>> GetBoards()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Day4_IP.txt");
+            Dictionary<int, Dictionary<int, List<int>>> boards = new Dictionary<int, Dictionary<int, List<int>>>();
+            Dictionary<int, Dictionary<int, List<int>>> orig = new Dictionary<int, Dictionary<int, List<int>>>();
+            int id = 0;
+            int board = 0;
+            Dictionary<int, List<int>> rowcol = new Dictionary<int, List<int>>();
+            foreach (var line in lines)
+            {
+                if (String.IsNullOrEmpty(line))
+                {
+                    //new board
+                    boards.Add(board, rowcol);
+                    orig.Add(board, rowcol);
+                    board++;
+                    rowcol = new Dictionary<int, List<int>>();
+                    id = 0;
+                }
+                else
+                {
+                    var arr = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    rowcol.Add(id, new List<int>());
+                    arr.ForEach(a => rowcol[id].Add(Convert.ToInt32(a)));
+                    id++;
+                }
+            }
+
+            //new board
+            boards.Add(board, rowcol);
+            orig.Add(board, rowcol);
+
+            foreach (var b in boards.Keys)
+            {
+                int colid = 5;
+                for (int i = 0; i < 5; i++)
+                {
+                    List<int> cols = new List<int>();
+                    foreach (var row in boards[b].Keys)
+                    {
+                        if (row < 5)
+                        {
+                            var r = boards[b][row];
+                            cols.Add(r[i]);
+                        }
+                    }
+                    boards[b].Add(colid++, cols);
+                }
+            }
+
+            return boards;
+        }
+
+        private void Day4_Puzzle1()
+        {
+            
+            List<int> winboards = new List<int>();
+            int winrow = -1;
+            int wincall = -1;
+            List<int> calls = new List<int> { 49, 48, 98, 84, 71, 59, 37, 36, 6, 21, 46, 30, 5, 33, 3, 62, 63, 45, 43, 35, 65, 77, 57, 75, 19, 44, 4, 76, 88, 92, 12, 27, 7, 51, 14, 72, 96, 9, 0, 17, 83, 64, 38, 95, 54, 20, 1, 74, 69, 80, 81, 56, 10, 68, 42, 15, 99, 53, 93, 94, 47, 13, 29, 34, 60, 41, 82, 90, 25, 85, 78, 91, 32, 70, 58, 28, 61, 24, 55, 87, 39, 11, 79, 50, 22, 8, 89, 26, 16, 2, 73, 23, 18, 66, 52, 31, 86, 97, 67, 40 };
+
+            //List<int> calls = new List<int> { 7, 4, 9, 5, 11, 17, 23, 2, 0, 14, 21, 24, 10, 16, 13, 6, 15, 25, 12, 22, 18, 20, 8, 19, 3, 26, 1 };
+
+            var boards = GetBoards();
+            var bcount = boards.Count;
+            int winboard = -1;
+
+            foreach (var call in calls)
+            {
+                foreach (var b in boards.Keys)
+                {
+                    if (winboards.Contains(b)) continue;
+                    foreach(var row in boards[b].Keys)
+                    {
+                        if (boards[b][row].Contains(call))
+                        {
+                            int index = boards[b][row].IndexOf(call);
+                            boards[b][row][index] = 200;
+
+                            if (boards[b][row].All(a => a == 200))
+                            {
+                                winboards.Add(b);
+                                winboard = b;
+                                winrow = row;
+                                wincall = call;
+                            }
+                        }
+                    }
+                }
+                if (winboards.Count == bcount)
+                    break;
+            }
+
+            int sum = 0;
+            HashSet<int> winnums = new HashSet<int>();
+            if (winboard != -1)
+            {
+                List<int> mods = new List<int>();
+                foreach(var row in boards[winboard].Keys)
+                {
+                    foreach(var val in boards[winboard][row])
+                    {
+                        if (val != 200)
+                        {
+                            if (!winnums.Contains(val))
+                            {
+                                winnums.Add(val);
+                                sum += val;
+                            }
+                        }
+                    }
+                }
+            }
+
+            var ans = sum * wincall;
+        }
