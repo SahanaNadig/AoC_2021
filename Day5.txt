@@ -1,0 +1,139 @@
+
+        private void Day5_Puzzle()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Day5_IP.txt");
+            List<(int, int)> points = new List<(int, int)>();
+            foreach (var line in lines)
+            {
+                var newstr = line.Replace("->", " ");
+                var arr = newstr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                int x1, x2, y1, y2;
+                
+                var cords = arr[0].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                x1 = Convert.ToInt32(cords[0]);
+                y1 = Convert.ToInt32(cords[1]);
+
+                cords = arr[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                x2 = Convert.ToInt32(cords[0]);
+                y2 = Convert.ToInt32(cords[1]);
+
+                if (x1 == x2 && y1 == y2)
+                {
+                    var pt = (x1,y1);
+                    points.Add(pt);
+                }
+                else if (x1 == x2)
+                {
+                    var pt = (x1, y1);
+                    points.Add(pt);
+
+                    pt = (x2, y2);
+                    points.Add(pt);
+
+                    if (y1 < y2)
+                    {
+                        for(int i = y1+1; i < y2; i++)
+                        {
+                            pt = (x1, i);
+                            points.Add(pt);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = y2+1; i < y1; i++)
+                        {
+                            pt = (x1, i);
+                            points.Add(pt);
+                        }
+                    }
+                }
+
+                else if (y1 == y2)
+                {
+                    var pt = (x1, y1);
+                    points.Add(pt);
+
+                    pt = pt = (x2, y2);
+                    points.Add(pt);
+
+                    if (x1 < x2)
+                    {
+                        for (int i = x1+1; i < x2; i++)
+                        {
+                            pt = (i, y1);
+                            points.Add(pt);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = x2+1; i < x1; i++)
+                        {
+                            pt = (i, y1);
+                            points.Add(pt);
+                        }
+                    }
+                }
+                // Below 2 loops are for part 2 only to include diagonals
+                else if (x1 > x2)
+                {
+                    var pt = (x1, y1);
+                    if (y1 > y2)
+                    {
+                        int y = y1;
+                        for (int x = x1; x >= x2; x--)
+                        {
+                            pt = (x, y);
+                            points.Add(pt);
+                            y--;
+                        }
+                    }
+                    else
+                    {
+                        int y = y1;
+                        for (int x = x1; x >= x2; x--)
+                        {
+                            pt = (x, y);
+                            points.Add(pt);
+                            y++;
+                        }
+                    }
+                }
+                else
+                {
+                    var pt = (x1, y1);
+                    if (y1 > y2)
+                    {
+                        int y = y1;
+                        for (int x = x1; x <= x2; x++)
+                        {
+                            pt = (x, y);
+                            points.Add(pt);
+                            y--;
+                        }
+                    }
+                    else
+                    {
+                        int y = y1;
+                        for (int x = x1; x <= x2; x++)
+                        {
+                            pt = (x, y);
+                            points.Add(pt);
+                            y++;
+                        }
+                    }
+                }
+            }
+
+            Dictionary<(int, int), int> cps = new Dictionary<(int, int), int>();
+            foreach(var p in points)
+            {
+                if (cps.ContainsKey(p))
+                {
+                    cps[p]++;
+                }
+                else
+                    cps.Add(p, 1);
+            }
+
+            var c = cps.Keys.Where(p => cps[p] > 1).Count();
+        }
