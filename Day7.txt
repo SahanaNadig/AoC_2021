@@ -1,0 +1,58 @@
+        private void Day7_Puzzle2()
+        {
+            var input = "16,1,2,0,4,2,7,1,2,14";
+         
+            List<int> iarray = new List<int>();
+            foreach (var i in input.Split(','))
+            {
+                iarray.Add(Convert.ToInt32(i));
+            }
+
+            iarray.Sort();
+            var distinct = iarray.Distinct().ToList();
+            double minfuel = Double.MaxValue;
+            for (int i = 0; i < distinct.Last(); i++)
+            {
+                double fuel = 0;
+                foreach (var j in iarray)
+                {
+                    var minf = Math.Abs(i - j);
+                    var f = (minf * (minf + 1)) / 2;
+                    fuel += f;
+                }
+
+                if (fuel < minfuel)
+                {
+                    minfuel = fuel;
+                }
+            }
+        }
+
+        private void Day7_Puzzle1()
+        {
+            var input = "16,1,2,0,4,2,7,1,2,14";
+            
+            List<int> iarray = new List<int>();
+            foreach(var i in input.Split(','))
+            {
+                iarray.Add(Convert.ToInt32(i));
+            }
+
+            iarray.Sort();
+            var distinct = iarray.Distinct().ToList();
+            double minfuel = Double.MaxValue;
+            for (int i = 0; i < distinct.Last(); i++)
+            {
+                double fuel = 0;
+                foreach (var j in iarray)
+                {
+                    var minf = Math.Abs(i - j);
+                    fuel += minf;
+                }
+
+                if (fuel < minfuel)
+                {
+                    minfuel = fuel;
+                }
+            }
+        }
