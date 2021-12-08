@@ -1,0 +1,199 @@
+
+        private void Day8_Puzzle1()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            List<(int, int)> points = new List<(int, int)>();
+            double count = 0.0;
+            foreach (var line in lines)
+            {
+                var newstr = line.Split('|');
+                var a1 = newstr[0].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                var a2 = newstr[1].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                var digit = 0;
+
+                foreach (var seg in a2)
+                {
+                    if (seg.Length == 2)
+                    {
+                        digit = 1;
+                        count++;
+                    }
+                    if (seg.Length == 3)
+                    {
+                        digit = 7;
+                        count++;
+                    }
+                    if (seg.Length == 4)
+                    {
+                        digit = 4;
+                        count++;
+                    }
+                    if (seg.Length == 7)
+                    {
+                        digit = 8;
+                        count++;
+                    }
+                }
+            }
+        }
+
+        private void Day8_Puzzle2()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            List<(int, int)> points = new List<(int, int)>();
+            double count = 0.0;
+            foreach (var line in lines)
+            {
+                var newstr = line.Split('|');
+                var a1 = newstr[0].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                var a2 = newstr[1].Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                Dictionary<int, String> numbers = new Dictionary<int, string>();
+                Dictionary<String, List<int>> segments = new Dictionary<string, List<int>>();
+                Dictionary<String, List<String>> doubts = new Dictionary<string, List<String>>();
+                foreach (var seg in a1)
+                {
+                    if (seg.Length == 2)
+                    {
+                        numbers.Add(1, String.Concat(seg.OrderBy(c => c)));
+                    }
+                    if (seg.Length == 3)
+                    {
+                        numbers.Add(7, String.Concat(seg.OrderBy(c => c)));
+                    }
+                    if (seg.Length == 4)
+                    {
+                        numbers.Add(4, String.Concat(seg.OrderBy(c => c)));
+                    }
+                    if (seg.Length == 7)
+                    {
+                        numbers.Add(8, String.Concat(seg.OrderBy(c => c)));
+                    }
+                    if (seg.Length == 5)
+                    {
+                        segments.Add(seg, new List<int> { 3, 5, 2 });
+                        if (!doubts.ContainsKey("235"))
+                            doubts.Add("235", new List<string>());
+                        doubts["235"].Add(seg);
+                    }
+                    if (seg.Length == 6)
+                    {
+                        segments.Add(seg, new List<int> { 0, 6, 9 });
+                        if (!doubts.ContainsKey("069"))
+                            doubts.Add("069", new List<string>());
+                        doubts["069"].Add(seg);
+                    }
+                }
+                // To figure out 1 (8-6)(8-9)(8-0)  - compare result with 1, the result is top right the rem is bottom right.
+                // (1 - 4) the result it top
+                // (8 - 0) (8 - 2) (8 - 3) (8 - 5) (8 - 6) (8 - 9) result is bottom
+                // (bottom - 3) result is middle
+                // (9 -3) (6 -3) (0 -3) which has 1 is top left
+                // remaining is bottom left
+                List<char> inter = new List<char>();
+                foreach(var i in doubts["069"])
+                {
+                    inter.AddRange((numbers[8].Except(i)).ToList());
+                }
+                inter = inter.Distinct().ToList();
+
+                var top_right_list = numbers[1].ToList().Intersect(inter).ToList();
+                var bot_right_list = numbers[1].ToList().Except(top_right_list).ToList();
+                var tr = top_right_list[0];
+                var br = bot_right_list[0];
+
+                var top_list =(numbers[7]).Except(numbers[1]).ToList();
+                var top = top_list[0];
+
+                char bot =' ';
+                foreach(var c in numbers[8])
+                {
+                    int cnt = 0;
+                    foreach (var i in doubts["069"])
+                    {
+                        if (i.Contains(c))
+                        {
+                            cnt++;
+                        }
+                    }
+                    foreach (var i in doubts["235"])
+                    {
+                        if (i.Contains(c))
+                        {
+                            cnt++;
+                        }
+                    }
+
+                    if (cnt == 6 && c != top)
+                        bot = c;
+                }
+
+                inter = new List<char>() { };
+
+                char mid = ' ';
+                foreach (var i in numbers[8])
+                {
+                    int cnt = 0;
+                    if (i == bot) continue;
+                    foreach(var n in doubts["235"])
+                    {
+                        if (n.Contains(i))
+                        {
+                            cnt++;
+                        }
+                    }
+                    if (cnt == 3 && i!= top && i!= bot )
+                        mid = i;
+                }
+
+                string three = top.ToString() + tr.ToString() + br.ToString() + mid.ToString() + bot.ToString();
+                numbers.Add(3, String.Concat(three.OrderBy(c=>c)));
+
+                // (9 -3) (6 -3) (0 -3) which has 1 is top left
+                // remaining is bottom left
+
+                char tl = ' ';
+                foreach (var i in numbers[8])
+                {
+                    int cnt = 0;
+                    if (i == bot) continue;
+                    foreach (var n in doubts["069"])
+                    {
+                        if (n.Contains(i))
+                        {
+                            cnt++;
+                        }
+                    }
+                    if (cnt == 3 && i != top && i != bot && i != mid && i != tr && i!= br)
+                        tl = i;
+                }
+
+                char bl = ' ';
+                foreach (var i in numbers[8])
+                {
+                    if (i != top && i != bot && i != mid && i != tr && i != br && i != tl)
+                    {
+                        bl = i;
+                    }
+                }
+
+                var allstr = top.ToString() + bot.ToString() + mid.ToString() + tl.ToString() + bl.ToString() + tr.ToString() + br.ToString();
+                numbers.Add(0, String.Concat((top.ToString() + bot.ToString() + tl.ToString() + bl.ToString() + tr.ToString() + br.ToString()).OrderBy(c => c)));
+                numbers.Add(6, String.Concat((top.ToString() + bot.ToString() + mid.ToString() + tl.ToString() + bl.ToString() + br.ToString()).OrderBy(c => c)));
+                numbers.Add(9, String.Concat((top.ToString() + bot.ToString() + mid.ToString() + tl.ToString() + tr.ToString() + br.ToString()).OrderBy(c => c)));
+                numbers.Add(2, String.Concat((top.ToString() + bot.ToString() + mid.ToString() + bl.ToString() + tr.ToString()).OrderBy(c => c)));
+                numbers.Add(5, String.Concat((top.ToString() + bot.ToString() + mid.ToString() + tl.ToString() + br.ToString()).OrderBy(c => c)));
+
+                String dig = String.Empty;
+                foreach (var o in a2)
+                {
+                    var ord = String.Concat(o.OrderBy(c => c));
+                    var x = numbers.FirstOrDefault(n => n.Value.Equals(ord));
+                    if (x.Value != null)
+                        dig += x.Key.ToString();
+                }
+                if (!String.IsNullOrEmpty(dig))
+                    count += Convert.ToDouble(dig);
+            }
+        }
