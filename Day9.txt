@@ -1,0 +1,207 @@
+        private void Day9_Puzzle2()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            int rows = lines.Count();
+            int cols = lines[0].Count();
+            List<(int, int, int)> array = new List<(int, int, int)>();
+            var lc = 0;
+            foreach (var line in lines)
+            {
+                int c = 0;
+                foreach (var num in line.ToArray())
+                {
+                    var dig = Convert.ToInt32(num.ToString());
+                    array.Add((lc, c, dig));
+                    c++;
+                }
+                lc++;
+            }
+
+            List<int> basins = new List<int>();
+            foreach (var num in array)
+            {
+                int p1 = 101, p2 = 100, p3 = 100, p4 = 100;
+
+                var curnum = num.Item3;
+                var curline = num.Item1;
+                if (array.Any(a => a.Item1 == curline - 1))
+                {
+                    var items = array.Where(a => a.Item1 == curline - 1);
+                    p1 = items.First(a => a.Item2 == num.Item2).Item3;
+                }
+
+                if (array.Any(a => a.Item2 == num.Item2 + 1))
+                {
+                    var items = array.Where(a => a.Item2 == num.Item2 + 1);
+                    p2 = items.First(a => a.Item1 == num.Item1).Item3;
+                }
+                if (array.Any(a => a.Item1 == curline + 1))
+                {
+                    var items = array.Where(a => a.Item1 == curline + 1);
+                    p3 = items.First(a => a.Item2 == num.Item2).Item3;
+                }
+                if (array.Any(a => a.Item2 == num.Item2 - 1))
+                {
+                    var items = array.Where(a => a.Item2 == num.Item2 - 1);
+                    p4 = items.First(a => a.Item1 == num.Item1).Item3;
+                }
+
+                if (curnum < p1 && curnum < p2 && curnum < p3 && curnum < p4)
+                {
+                    List<(int, int, int)> allnums = new List<(int, int, int)>() { num };
+                    var ac = 1;
+                    var basincount = 0;
+                    List<(int, int, int)> usednums = new List<(int, int, int)>();
+                    while (ac > 0)
+                    {
+                        var numc = allnums[0];
+                        var temp = numc.Item1 - 1;
+                        if (array.Any(a => a.Item1 == temp))
+                        {
+                            var items = array.Where(a => a.Item1 == temp);
+                            var cur = items.First(a => a.Item2 == numc.Item2);
+                            p1 = cur.Item3;
+                            if (usednums.Contains(cur) || p1 == 9)
+                            {
+
+                            }
+                            else
+                            {
+                                if (!allnums.Contains(cur))
+                                {
+                                    allnums.Add(cur);
+                                    basincount++;
+                                }
+                                temp--;
+                            }
+                        }
+
+                        temp = numc.Item2 + 1;
+                        if (array.Any(a => a.Item2 == temp))
+                        {
+                            var items = array.Where(a => a.Item2 == temp);
+                            var cur = items.First(a => a.Item1 == numc.Item1);
+                            p2 = cur.Item3;
+                            if (usednums.Contains(cur) || p2 == 9)
+                            {
+
+                            }
+                            else
+                            {
+                                if (!allnums.Contains(cur))
+                                {
+                                    allnums.Add(cur);
+                                    basincount++;
+                                }
+                                temp--;
+                            }
+                        }
+
+                        temp = numc.Item1 + 1;
+                        if (array.Any(a => a.Item1 == temp))
+                        {
+                            var items = array.Where(a => a.Item1 == temp);
+                            var cur = items.First(a => a.Item2 == numc.Item2);
+                            p3 = cur.Item3;
+                            if (usednums.Contains(cur) || p3 == 9)
+                            {
+
+                            }
+                            else
+                            {
+                                if (!allnums.Contains(cur))
+                                {
+                                    allnums.Add(cur);
+                                    basincount++;
+                                }
+                                temp--;
+                            }
+                        }
+
+                        temp = numc.Item2 - 1;
+                        if (array.Any(a => a.Item2 == temp))
+                        {
+                            var items = array.Where(a => a.Item2 == temp);
+                            var cur = items.First(a => a.Item1 == numc.Item1);
+                            p4 = cur.Item3;
+                            if (usednums.Contains(cur) || p4 == 9)
+                            {
+
+                            }
+                            else
+                            {
+                                if (!allnums.Contains(cur))
+                                {
+                                    allnums.Add(cur);
+                                    basincount++;
+                                }
+                                temp--;
+                            }
+                        }
+                        usednums.Add(numc);
+                        allnums.Remove(numc);
+                        ac = allnums.Count;
+                    }
+                    basins.Add(basincount + 1);
+                }
+            }
+
+            basins.Sort();
+            var cnt = basins.Count();
+            var ans = basins[cnt - 1] * basins[cnt - 2] * basins[cnt - 3];
+        }
+
+        private void Day9_Puzzle1()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            int rows = lines.Count();
+            int cols = lines[0].Count();
+            List<(int, int, int)> array = new List<(int, int, int)>();
+            var lc = 0;
+            foreach(var line in lines)
+            {
+                int c = 0;
+                foreach(var num in line.ToArray())
+                {
+                    var dig = Convert.ToInt32(num.ToString());
+                    array.Add ((lc, c, dig));
+                    c++;
+                }
+                lc++;
+            }
+
+            Double ans = 0.0;
+            foreach(var num in array)
+            {
+                int p1=101, p2 = 100, p3 =100, p4 = 100;
+
+                var curnum = num.Item3;
+                var curline = num.Item1;
+                if (array.Any(a => a.Item1 == curline -1))
+                {
+                    var items = array.Where(a => a.Item1 == curline - 1);
+                    p1 = items.First(a => a.Item2 == num.Item2).Item3;
+                }
+
+                if (array.Any(a => a.Item2 == num.Item2 + 1))
+                {
+                    var items = array.Where(a => a.Item2 == num.Item2 + 1);
+                    p2 = items.First(a => a.Item1 == num.Item1).Item3;
+                }
+                if (array.Any(a => a.Item1 == curline + 1))
+                {
+                    var items = array.Where(a => a.Item1 == curline + 1);
+                    p3 = items.First(a => a.Item2 == num.Item2).Item3;
+                }
+                if (array.Any(a => a.Item2 == num.Item2 - 1))
+                {
+                    var items = array.Where(a => a.Item2 == num.Item2 - 1);
+                    p4 = items.First(a => a.Item1 == num.Item1).Item3;
+                }
+
+                if (curnum < p1 && curnum < p2 && curnum < p3 && curnum < p4)
+                {
+                    ans += curnum + 1;
+                }
+            }
+        }
