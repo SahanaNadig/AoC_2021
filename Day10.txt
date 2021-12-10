@@ -1,0 +1,166 @@
+        private void Day10_Puzzle2()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            List<char> open_symbols = new List<char>() { '[', '(', '<', '{' };
+            List<char> close_symbols = new List<char>() { ']', ')', '>', '}' };
+
+            Stack<char> stack = new Stack<char>();
+            List<char> invalids = new List<char>();
+            List<String> inCompletes = new List<string>();
+            foreach (var line in lines)
+            {
+                bool islineValid = true;
+                foreach (var curr in line)
+                {
+                    if (close_symbols.Contains(curr))
+                    {
+                        var top = stack.Pop();
+                        switch (curr)
+                        {
+                            case ']':
+                                if (top != '[')
+                                {
+                                    islineValid = false;
+                                    invalids.Add(curr);
+                                }
+                                break;
+                            case ')':
+                                if (top != '(')
+                                {
+                                    islineValid = false;
+                                    invalids.Add(curr);
+                                }
+                                break;
+                            case '}':
+                                if (top != '{')
+                                {
+                                    islineValid = false;
+                                    invalids.Add(curr);
+                                }
+                                break;
+                            case '>':
+                                if (top != '<')
+                                {
+                                    islineValid = false;
+                                    invalids.Add(curr);
+                                }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        stack.Push(curr);
+                    }
+                }
+                if (islineValid)
+                {
+                    inCompletes.Add(line);
+                }
+            }
+
+            List<double> incompleteScores = new List<double>();
+            foreach (var line in inCompletes)
+            {
+                Stack<char> localstack = new Stack<char>();
+                foreach (var curr in line)
+                {
+                    if (close_symbols.Contains(curr))
+                    {
+                        var top = localstack.Pop();                        
+                    }
+                    else
+                    {
+                        localstack.Push(curr);
+                    }
+                }
+
+                double localcount = 0;
+                while(localstack.Count > 0)
+                {
+                    var c = localstack.Pop();
+                    localcount *= 5;
+                    switch (c)
+                    {
+                        case '[':
+                            localcount += 2;
+                            break;
+                        case '(':
+                            localcount += 1;
+                            break;
+                        case '{':
+                            localcount += 3;
+                            break;
+                        case '<':
+                            localcount += 4;
+                            break;
+                    }
+                }
+                incompleteScores.Add(localcount);
+            }
+
+            incompleteScores.Sort();
+            var mid = incompleteScores[incompleteScores.Count / 2];         
+        }
+
+        private void Day10_Puzzle1()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            List<char> open_symbols = new List<char>() { '[', '(', '<', '{' };
+            List<char> close_symbols = new List<char>() { ']', ')', '>', '}' };
+
+            Stack<char> stack = new Stack<char>();
+            List<char> invalids = new List<char>();
+            foreach(var line in lines)
+            {
+                foreach(var curr in line)
+                {
+                    if (close_symbols.Contains(curr))
+                    {
+                        var top = stack.Pop();
+                        switch (curr)
+                        {
+                            case ']':
+                                if (top != '[')
+                                    invalids.Add(curr);
+                                break;
+                            case ')':
+                                if (top != '(')
+                                    invalids.Add(curr);
+                                break;
+                            case '}':
+                                if (top != '{')
+                                    invalids.Add(curr);
+                                break;
+                            case '>':
+                                if (top != '<')
+                                    invalids.Add(curr);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        stack.Push(curr);
+                    }
+                }
+            }
+
+            double count = 0;
+            foreach(var c in invalids)
+            {
+                switch(c)
+                {
+                    case ']':
+                        count += 57;
+                        break;
+                    case ')':
+                        count += 3;
+                        break;
+                    case '}':
+                        count += 1197;
+                        break;
+                    case '>':
+                        count += 25137;
+                        break;
+                }
+            }
+        }
