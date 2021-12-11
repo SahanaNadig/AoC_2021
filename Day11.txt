@@ -1,0 +1,256 @@
+        private void Day11_Puzzle1()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            Dictionary<(int, int), int> octs = new Dictionary<(int, int), int>();
+            int i = 0, j = 0;
+            foreach(var line in lines)
+            {
+                j = 0;
+                foreach(var o in line)
+                {
+                    var id = Convert.ToInt32(o.ToString());
+                    octs.Add((i, j), id);
+                    j++;
+                }
+                i++;
+            }
+            double totalcount = 0.0;
+            int pos = 0;
+            for (j = 0; j < 100; j++)
+            {
+                pos++;
+                var count = octs.Count;
+                for( i = 0; i < count; i++)
+                {
+                    var oct = octs.ElementAt(i);
+                    octs[oct.Key]++;
+                }
+                double localcount = 0;
+                HashSet<(int, int)> flashed = new HashSet<(int, int)>();
+                while(true)
+                {
+                    if (octs.Values.Any(o => o > 9))
+                    {
+                        for (i = 0; i < count; i++)
+                        {
+                            var octat = octs.ElementAt(i);
+                            var oct = octat.Key;
+                            if (octs[oct] > 9)
+                            {
+                                octs[oct] = 0;
+                                flashed.Add(oct);
+                                totalcount++;
+                                localcount++;
+                                //left
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                //right
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                // up
+                                if (octs.Keys.Any(o => o.Item1 == oct.Item1 - 1 && o.Item2 == oct.Item2))
+                                {
+                                    var l = octs.Keys.First(o => o.Item1 == oct.Item1 - 1 && o.Item2 == oct.Item2);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                //down
+                                if (octs.Keys.Any(o => o.Item1 == oct.Item1 + 1 && o.Item2 == oct.Item2))
+                                {
+                                    var l = octs.Keys.First(o => o.Item1 == oct.Item1 + 1 && o.Item2 == oct.Item2);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                // ul
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1 - 1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1 - 1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                // bl
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1 + 1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1 + 1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                // ur
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1 - 1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1 - 1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                //br
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1 + 1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1 + 1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void Day11_Puzzle2()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            Dictionary<(int, int), int> octs = new Dictionary<(int, int), int>();
+            int i = 0, j = 0;
+            foreach (var line in lines)
+            {
+                j = 0;
+                foreach (var o in line)
+                {
+                    var id = Convert.ToInt32(o.ToString());
+                    octs.Add((i, j), id);
+                    j++;
+                }
+                i++;
+            }
+            double totalcount = 0.0;
+            int pos = 0;
+            while (true)
+            {
+                pos++;
+                var count = octs.Count;
+                for (i = 0; i < count; i++)
+                {
+                    var oct = octs.ElementAt(i);
+                    octs[oct.Key]++;
+                }
+                double localcount = 0;
+                HashSet<(int, int)> flashed = new HashSet<(int, int)>();
+                while (true)
+                {
+                    if (octs.Values.Any(o => o > 9))
+                    {
+                        for (i = 0; i < count; i++)
+                        {
+                            var octat = octs.ElementAt(i);
+                            var oct = octat.Key;
+                            if (octs[oct] > 9)
+                            {
+                                octs[oct] = 0;
+                                flashed.Add(oct);
+                                totalcount++;
+                                localcount++;
+                                //left
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                //right
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                // up
+                                if (octs.Keys.Any(o => o.Item1 == oct.Item1 - 1 && o.Item2 == oct.Item2))
+                                {
+                                    var l = octs.Keys.First(o => o.Item1 == oct.Item1 - 1 && o.Item2 == oct.Item2);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                //down
+                                if (octs.Keys.Any(o => o.Item1 == oct.Item1 + 1 && o.Item2 == oct.Item2))
+                                {
+                                    var l = octs.Keys.First(o => o.Item1 == oct.Item1 + 1 && o.Item2 == oct.Item2);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                // ul
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1 - 1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1 - 1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                // bl
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1 + 1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 - 1 && o.Item1 == oct.Item1 + 1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                // ur
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1 - 1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1 - 1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                                //br
+                                if (octs.Keys.Any(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1 + 1))
+                                {
+                                    var l = octs.Keys.First(o => o.Item2 == oct.Item2 + 1 && o.Item1 == oct.Item1 + 1);
+                                    if (!flashed.Contains(l))
+                                    {
+                                        octs[l]++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                if (localcount == 100)
+                {
+                    break;
+                }
+            }
+
+        }
