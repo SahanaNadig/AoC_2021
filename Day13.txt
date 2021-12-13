@@ -1,0 +1,144 @@
+
+        private void Day13_Puzzle1()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            List<int> x = new List<int>();
+            List<int> y = new List<int>();
+            List<(int, int)> xy = new List<(int, int)>();
+            foreach (var line in lines)
+            {
+                var arr = line.Split(',');
+                x.Add(Convert.ToInt32(arr[0]));
+                y.Add(Convert.ToInt32(arr[1]));
+                xy.Add((Convert.ToInt32(arr[0]), Convert.ToInt32(arr[1])));
+            }
+            Dictionary<int, List<(int, int)>> colsList = new Dictionary<int, List<(int, int)>>();
+            Dictionary<int, List<(int, int)>> rowsList = new Dictionary<int, List<(int, int)>>();
+            var rows = y.Max();
+            var cols = x.Max();
+            for (int i = 0; i <= rows; i++)
+            {
+                rowsList.Add(i, new List<(int, int)>());
+            }
+            for (int j = 0; j <= cols; j++)
+            {
+                colsList.Add(j, new List<(int, int)>());
+            }
+            
+            foreach(var mark in xy)
+            {
+                rowsList[mark.Item2].Add(mark);
+                colsList[mark.Item1].Add(mark);
+            }
+
+            List<String> folds = new List<string>() { "x=655", "y=447", "x=327", "y=223", "x=163", "y=111", "x=81", "y=55", "x=40", "y=27", "y=13", "y=6" };
+            foreach(var fold in folds)
+            {
+                var count = 0;
+                bool xfold = true;
+                if (fold.Split('=')[0] == "y")
+                    xfold = false;
+                int foldat = Convert.ToInt32(fold.Split('=')[1]);
+                if (xfold)
+                {
+                    Dictionary<int, List<(int, int)>> newCols = new Dictionary<int, List<(int, int)>>();
+                    int jj = foldat * 2;
+                    for (int i = 0; i < foldat; i++)
+                    {
+                        var line1 = colsList.ContainsKey(i) ? colsList[i] : null;
+                        var line2 = colsList.ContainsKey(jj) ? colsList[jj] : null;
+                        newCols.Add(i, new List<(int, int)>());
+                        var newlist = new List<(int, int)>();
+                       if (line1 != null)
+                        {
+                            foreach (var a in line1)
+                            {
+                                if (!newlist.Contains((i, a.Item2)))
+                                {
+                                    newlist.Add((i, a.Item2));
+                                    count++;
+                                }
+                            }
+                        }
+                        if (line2 != null)
+                        {
+                            foreach (var a in line2)
+                            {
+                                if (!newlist.Contains((i, a.Item2)))
+                                {
+                                    newlist.Add((i, a.Item2));
+                                    count++;
+                                }
+                            }
+                        }
+                        newCols[i] = newlist;
+                        jj--;
+                    }
+                    colsList = newCols;
+
+                    foreach (var r in rowsList.Keys)
+                    {
+                        rowsList[r].RemoveAll(n => n.Item2 > foldat);
+                    }
+                }
+                else
+                {
+                    Dictionary<int, List<(int, int)>> newRows = new Dictionary<int, List<(int, int)>>();
+                    int jj = foldat * 2;
+                    for (int i = 0; i < foldat; i++)
+                    {
+                        var line1 = rowsList.ContainsKey(i) ? rowsList[i] : null;
+                        var line2 = rowsList.ContainsKey(jj) ? rowsList[jj] : null;
+                        newRows.Add(i, new List<(int, int)>());
+                        var newlist = new List<(int, int)>();
+                        if (line1 != null)
+                        {
+                            foreach (var a in line1)
+                            {
+                                if (!newlist.Contains((a.Item1, i)))
+                                {
+                                    newlist.Add((a.Item1, i));
+                                    count++;
+                                }
+                            }
+                        }
+                        if (line2 != null)
+                        {
+                            foreach (var a in line2)
+                            {
+                                if (!newlist.Contains((a.Item1, i)))
+                                {
+                                    newlist.Add((a.Item1, i));
+                                    count++;
+                                }
+                            }
+                        }
+                        newRows[i] = newlist;
+                        jj--;
+                    }
+
+                    rowsList = newRows;
+                    foreach (var r in colsList.Keys)
+                    {
+                        colsList[r].RemoveAll(n => n.Item1 > foldat);
+                    }
+                }
+            }
+
+            List<String> strs = new List<string>();           
+
+            foreach (var row in rowsList.Keys)
+            {
+                String rowstr = String.Empty;
+                for (int i = 0; i < 1500; i++)
+                {
+                    if (rowsList[row].Any(r => r.Item1 == i))
+                    {
+                        rowstr += "#";
+                    }
+                    else
+                        rowstr += ".";
+                }
+                strs.Add(rowstr);
+            }
+        }
