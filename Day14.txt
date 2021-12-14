@@ -1,0 +1,58 @@
+
+
+        private void Day14_Puzzle()
+        {
+            var lines = ReadFileAsLines(@"C:\Users\ssnagara\source\repos\AOC_2021\Input.txt");
+            String polymer = "COPBCNPOBKCCFFBSVHKO";
+            Dictionary<String, String> rules = new Dictionary<string, string>();
+            foreach (var line in lines)
+            {
+                var arr = line.Split('-');
+                rules.Add(arr[0], arr[1]);
+            }
+
+            Dictionary<String, double> combinations = new Dictionary<string, double>();
+            for (int i = 0; i < polymer.Length -1; ++i)
+            {
+                var str = polymer.Substring(i, 2);
+                if (!combinations.ContainsKey(str))
+                    combinations.Add(str, 0);
+                combinations[str]++;
+            }
+
+            for (int i = 0; i < 40; ++i)
+            {
+                Dictionary<String, double> newcoms = new Dictionary<string, double>();
+                foreach (var val in combinations)
+                {
+                    var first = val.Key.Substring(0, 1) + rules[val.Key];
+                    var second = rules[val.Key] + val.Key.Substring(1);
+
+                    if (!newcoms.ContainsKey(first))
+                        newcoms.Add(first, 0);
+                    newcoms[first] += val.Value; ;
+
+                    if (!newcoms.ContainsKey(second))
+                        newcoms.Add(second, 0);
+                    newcoms[second] += val.Value;
+                }
+                combinations = newcoms;
+            }
+
+
+            Dictionary<char, double> counts = new Dictionary<char, double>();
+
+            foreach (var val in combinations)
+            {
+                var str = val.Key.Substring(0, 1)[0];
+                if (!counts.ContainsKey(str))
+                    counts.Add(str, 0);
+                counts[str] += val.Value;
+            }
+
+            counts[polymer.Substring(polymer.Length - 1)[0]]++;
+
+            var max = counts.Values.Max();
+            var min = counts.Values.Min();
+            var ans = max - min;
+        }
